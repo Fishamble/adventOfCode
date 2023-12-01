@@ -1037,7 +1037,7 @@ const day1 = () => {
     while (last === null) {
       if (line[line.length - 1] >= 1 || line[line.length - 1] <= 9) last = line[line.length - 1];
 
-      
+      // key here is to take away the length of the string 'one' == -3 etc
       numberString.forEach((numString) => {
         if (line.lastIndexOf(numString[0]) !== -1 && line.lastIndexOf(numString[0]) === line.length - numString[0].length) {
             last = numString[1];
@@ -1059,4 +1059,6 @@ const day1 = () => {
 };
 
 day1();
+
+
 

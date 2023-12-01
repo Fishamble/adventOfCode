@@ -1016,12 +1016,14 @@ const day1 = () => {
 
   let output = 0;
 
+
+
   input.forEach((line) => {
-    let originalLine = line
     
     let first = null;
     let last = null;
-
+    // Work from start of string to check if the char is a number
+    // or char is the first letter of a string number representation 'one', 'two' etc 
     while (first === null) {
       if (line[0] >= 1 || line[0] <= 9) first = line[0];
 
@@ -1031,9 +1033,11 @@ const day1 = () => {
       line = line.slice(1);
     }
 
+    // work from the end to find the last number
     while (last === null) {
       if (line[line.length - 1] >= 1 || line[line.length - 1] <= 9) last = line[line.length - 1];
 
+      
       numberString.forEach((numString) => {
         if (line.lastIndexOf(numString[0]) !== -1 && line.lastIndexOf(numString[0]) === line.length - numString[0].length) {
             last = numString[1];
@@ -1041,12 +1045,12 @@ const day1 = () => {
       });
 
       line = line.slice(0, -1);
+
+      // if we dont find a last number
        if(line.length===0 && last === null) {
         last = first
        }
     }
-
-    console.log(originalLine, first,last)
 
     output += Number(first.toString() + last.toString());
   });

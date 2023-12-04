@@ -186,81 +186,44 @@ Card 185: 95 13 15 61 49 19 60 21 33 87 | 30 36 52 88 23 65 95 25 53 51 77 32 66
 Card 186: 41 48 94 68 60 15 22 55 84  2 | 57 53  9 50  4 16 11 62 61  6 46 52  8 35 23 39 51 72 43 22 81 56 77 45 19
 Card 187: 57 81 33  3 42 78 83 30  2  9 | 14 85 99  1 55 54 66 56 26 21 12 86 20 39 37 41 94 15 24 76 91 73 44 36  8`;
 
-let inputppp = `Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
-Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
-Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
-Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
-Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
-Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11`;
-
-const part1 = () => {
-  let out = 0;
-  input = input.split("\n");
-
-  input.forEach((line, index) => {
-    line = line.split(":")[1];
-    //strip out part before colon
-    line = line.split("|");
-    let winNumbers = line[0]
-      .split(" ")
-      .filter((num) => num !== "")
-      .map((num) => parseInt(num));
-    let myNumbers = line[1]
-      .split(" ")
-      .filter((num) => num !== "")
-      .map((num) => parseInt(num));
-
-    let matchCount = 0;
-
-    winNumbers.forEach((winNumber) => {
-      if (myNumbers.indexOf(winNumber) !== -1) matchCount++;
-    });
-
-    if (matchCount > 0) out += 2 ** (matchCount - 1);
-  });
-  console.log(out);
-};
-
-// part1();
-/*************************************************************************************/
 
 const part2 = () => {
-  let out = 0;
-  input = input.split("\n");
-
-  let cardCount = new Array(input.length).fill(1);
-
-  input.forEach((line, index) => {
-    line = line.split(":")[1];
-    //strip out part before colon
-
-    line = line.split("|");
-    let winNumbers = line[0]
-      .split(" ")
-      .filter((num) => num !== "")
-      .map((num) => parseInt(num));
-    let myNumbers = line[1]
-      .split(" ")
-      .filter((num) => num !== "")
-      .map((num) => parseInt(num));
-
-    let matchCount = 0;
-
-    winNumbers.forEach((winNumber) => {
-      if (myNumbers.indexOf(winNumber) !== -1) matchCount++;
-    });
-
-    for (let i = index + 1; i <= index + matchCount; i++) {
-      if (i < input.length) {
-        cardCount[i] += cardCount[index];
+    let out = 0;
+    input = input.split("\n");
+  
+    let cardCount = new Array(input.length).fill(1);
+  
+    input.forEach((line, index) => {
+      line = line.split(":")[1];
+      //strip out part before colon
+  
+      line = line.split("|");
+      let winNumbers = line[0]
+        .split(" ")
+        .filter((num) => num !== "")
+        .map((num) => parseInt(num));
+      let myNumbers = line[1]
+        .split(" ")
+        .filter((num) => num !== "")
+        .map((num) => parseInt(num));
+  
+      let matchCount = 0;
+  
+      winNumbers.forEach((winNumber) => {
+        if (myNumbers.indexOf(winNumber) !== -1) matchCount++;
+      });
+  
+      for (let i = index + 1; i <= index + matchCount; i++) {
+        if (i < input.length) {
+          cardCount[i] += cardCount[index];
+        }
       }
-    }
-
-    
-  });
-
-  out = cardCount.reduce((acc, count) => acc + count, 0);
-
-};
-
-part2();
+  
+      
+    });
+  
+    out = cardCount.reduce((acc, count) => acc + count, 0);
+    console.log(out)
+  };
+  
+  part2();

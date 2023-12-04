@@ -99,78 +99,30 @@ Game 98: 18 blue, 6 green; 11 green, 3 blue, 7 red; 18 blue, 3 red, 7 green; 5 r
 Game 99: 3 red, 2 green, 3 blue; 1 red, 4 green, 1 blue; 2 green, 18 red; 15 red, 1 blue; 2 blue, 9 red, 2 green; 17 red, 3 blue, 4 green
 Game 100: 9 blue, 8 red, 16 green; 3 red, 7 green, 8 blue; 1 green, 3 red, 12 blue; 3 green, 14 blue`;
 
-// const input = `Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-// Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
-// Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
-// Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-// Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green`
-
 const part1 = () => {
   let output = 0;
-  let current = {};
-
   let games = input.split("\n");
 
-  games.forEach((game, index) => {
-    let semiColomn = game.indexOf(":");
-
-    current.game = game;
-    let id = game.slice(0, semiColomn).slice(5);
-    current.id = id;
-
-    game = game.slice(semiColomn + 1);
-
-    // if (id == 1) console.log(game);
-
-    game = game.split(";");
-
-    // if (id == 1) console.log(game);
-
+  games.forEach((game, gameIndex) => {
+    game = game.split(":")[1].split(";");
     let possible = true;
 
-    game.forEach((handfull) => {
-      let redCount = 0;
-      let greenCount = 0;
-      let blueCount = 0;
+    game.forEach((sets) => {
+      let redCount,
+        greenCount,
+        blueCount = 0;
 
-      
-      handfull.split(",").forEach((hand, index) => {
-          hand = hand.split(" ");
-          
-          // if (id == 2) console.log(hand,possible);
-          
-          if (hand[2] === "red") redCount += +hand[1];
-          else if (hand[2] === "green") greenCount += +hand[1];
-          else if (hand[2] === "blue") blueCount += +hand[1];
-        });
-        
-        // if (id == 2) console.log(handfull);
-        if (possible===true) console.log(handfull, redCount>12?redCount:'', greenCount>13?greenCount:'', blueCount>12?blueCount:'');
+      sets.split(",").forEach((hand) => {
+        const [handAmount, handColor] = hand.trim().split(" ");
 
-      if (possible === true && redCount > 12) {
-        // current.failedOn = handfull;
-        // current.failColor = "red";
-        possible = false;
-        // output += parseInt(id);
-      } else if (possible === true && greenCount > 13) {
-        // current.failedOn = handfull;
-        // current.failColor = "green";
-        possible = false;
-        // output += parseInt(id);
-      } else if (possible === true && blueCount > 14) {
-        // current.failedOn = handfull;
-        // current.failColor = "blue";
-        possible = false;
-        // output += parseInt(id);
-      }
+        if (handColor === "red") redCount = +handAmount;
+        else if (handColor === "green") greenCount = +handAmount;
+        else if (handColor === "blue") blueCount = +handAmount;
+      });
+
+      if (possible === true && (redCount > 12 || greenCount > 13 || blueCount > 14)) possible = false;
     });
-
-    if (possible === true) {
-      output += parseInt(id);
-      
-        console.log(id,game)
-
-    }
+    if (possible === true) output += gameIndex + 1;
   });
 
   return output;
@@ -179,4 +131,3 @@ const part1 = () => {
 console.log(part1());
 
 // 12 red cubes, 13 green cubes, and 14 blue cubes
-

@@ -139,12 +139,10 @@ let input = `.......358..........31.....339.....669.............598......328....
 .............*........36..........743.=.../...............*......*..424.................580.#...897.448....*.......833...633.....*...*......
 .............963......................542........734.....901...914..........843.............523..........818..................691.....833...`;
 
-
-
 const part1 = () => {
   input = input.split("\n");
 
-  let out=0;
+  let out = 0;
 
   let numbers = [];
   let currentNumber = null;
@@ -175,7 +173,6 @@ const part1 = () => {
     numbers.push(currentNumber);
   }
 
-
   // here i add a row of '.' to the top and sides so my loop wont go out of bounds.
   input = input.map((line) => "." + line + ".");
   input.unshift(".".repeat(142));
@@ -188,7 +185,6 @@ const part1 = () => {
     let lineIndex = el[2];
     let valid = false;
 
-
     let currentChar = input[lineIndex][startIndex - 1];
     if (isSpecialChar(currentChar)) valid = true;
 
@@ -196,7 +192,6 @@ const part1 = () => {
     if (isSpecialChar(currentChar)) valid = true;
 
     for (let i = startIndex - 1; i < endIndex + 1; i++) {
-
       currentChar = input[lineIndex - 1][i];
       if (isSpecialChar(currentChar)) {
         valid = true;
@@ -208,16 +203,213 @@ const part1 = () => {
       }
     }
 
-    if(valid===true) out += parseInt(number)
+    if (valid === true) out += parseInt(number);
   });
 
-    console.log(out);
+  console.log(out);
 };
 
-part1();
+// part1();
 
 function isSpecialChar(char) {
-
   return !((parseInt(char) >= 0 && parseInt(char) <= 9) || char === ".");
-
 }
+
+function isNumber(char){
+    return parseInt(char) >= 0 && parseInt(char) <= 9
+}
+
+
+const part2 = () => {
+  input = input.split("\n");
+
+  let out = 0;
+  let gearNumbers = [];
+
+  let numbers = [];
+  let currentNumber = null;
+
+  input.forEach((line, lineIndex) => {
+    line.split("").forEach((char, charIndex) => {
+      if (charIndex === 0 && currentNumber !== null) {
+        // On the start of a new line if there is a number carried over
+        numbers.push(currentNumber);
+        currentNumber = null;
+      }
+
+      if (parseInt(char) >= 0 && parseInt(char) <= 9) {
+        if (currentNumber === null) {
+          currentNumber = [char, charIndex + 1, lineIndex + 1];
+        } else {
+          currentNumber[0] += char;
+        }
+      } else if (currentNumber !== null) {
+        numbers.push(currentNumber);
+        currentNumber = null;
+      }
+    });
+  });
+
+  // need???
+  if (currentNumber !== null) {
+    numbers.push(currentNumber);
+  }
+
+  // here i add a row of '.' to the top and sides so my loop wont go out of bounds.
+  input = input.map((line) => "." + line + ".");
+  input.unshift(".".repeat(142));
+  input.push(".".repeat(142));
+
+
+  const findAdjacent = (el,gearLocation)=>{
+
+    let number = el[0];
+    let numberStartIndex = el[1];
+    let numberEndIndex = numberStartIndex + number.length;
+    let numberLine = el[2];
+
+    let gearLine = gearLocation[0];
+    let gearPosInLine = gearLocation[1]
+
+    // if the gear is on the same line, to the right of the number
+
+    if(gearLine===numberLine && gearPosInLine===numberEndIndex ){   
+        if(isNumber(input[gearLine][gearPosInLine+1])===true){
+            
+            let multiplyNum = ''
+            let startIndex = gearPosInLine+1
+            let endIndex = gearPosInLine+1
+            
+            while(isNumber(input[gearLine][endIndex])===true){
+                multiplyNum += input[gearLine][endIndex]
+                endIndex += 1;
+            }
+            // console.log(number,multiplyNum)   
+            out += number * multiplyNum;
+            input[gearLine][gearPosInLine]='.'
+        }
+      
+    } else if(gearLine===numberLine+1 ){   
+    // if the gear is on the  line below, to the right of the number
+
+        if( isNumber(input[gearLine][gearPosInLine+1])===true){
+            let multiplyNum = ''
+            // let startIndex = gearPosInLine+1
+            let endIndex = gearPosInLine+1
+            
+            while(isNumber(input[gearLine][endIndex])===true){
+                multiplyNum += input[gearLine][endIndex]
+                endIndex += 1;
+            }
+            // console.log(number,':',multiplyNum)   
+            out += number * parseInt(multiplyNum);
+            input[gearLine][gearPosInLine]='.'
+
+
+
+    // if the gear is on the  line below, to the left of the number
+
+        } else if( isNumber(input[gearLine][gearPosInLine-1])===true){
+            let multiplyNum = ''
+            let endIndex = gearPosInLine-1
+            
+            while(isNumber(input[gearLine][endIndex])===true){
+                multiplyNum =  input[gearLine][endIndex] + multiplyNum
+                endIndex -= 1;
+            }
+            // console.log(number,':',multiplyNum)   
+            out += number *  parseInt(multiplyNum);
+            input[gearLine][gearPosInLine]='.'
+
+        } 
+
+    } else  {
+    
+        console.log('here')
+        
+        let startIndex = gearPosInLine-1
+
+        if(isNumber(input[gearLine+1][gearPosInLine-1])===true ){
+            //move left until find a dot
+
+            while(isNumber(input[gearLine+1][startIndex])===true){
+                startIndex -= 1
+            }
+        } else {
+            while(isNumber(input[gearLine+1][startIndex])===true){
+                startIndex += 1
+            }
+        }
+
+        let multiplyNum = ''
+        let endIndex = startIndex
+        
+        while(isNumber(input[gearLine][endIndex])===true){
+            multiplyNum =  input[gearLine][endIndex] + multiplyNum
+            endIndex -= 1;
+        }
+        console.log(number,':',multiplyNum)   
+        out += number *  parseInt(multiplyNum);
+    }
+    
+
+    
+    
+  }
+
+
+
+//   *****************************************
+
+  numbers.forEach((el) => {
+    let number = el[0];
+    let startIndex = el[1];
+    let endIndex = startIndex + number.length;
+    let lineIndex = el[2];
+    let valid = false;
+    let gearLocation = null;
+
+    let currentChar = input[lineIndex][startIndex - 1];
+    if (isAGear(currentChar)) {
+      valid = true;
+      gearLocation = [lineIndex, startIndex - 1];
+    }
+
+    currentChar = input[lineIndex][endIndex];
+    if (isAGear(currentChar)) {
+      valid = true;
+      gearLocation = [lineIndex, endIndex];
+    }
+
+    for (let i = startIndex - 1; i < endIndex + 1; i++) {
+      currentChar = input[lineIndex - 1][i];
+      if (isAGear(currentChar)) {
+        valid = true;
+        gearLocation = [lineIndex - 1, i];
+      }
+
+      currentChar = input[lineIndex + 1][i];
+      if (isAGear(currentChar)) {
+        valid = true;
+        gearLocation = [lineIndex + 1, i];
+      }
+    }
+
+    if (valid === true) {
+    //   gearNumbers.push([number,gearLocation]);
+
+        findAdjacent(el,gearLocation)
+
+
+    }
+  });
+
+  console.log(gearNumbers);
+};
+
+part2();
+
+function isAGear(char) {
+  return char === "*";
+}
+

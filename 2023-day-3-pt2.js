@@ -149,36 +149,75 @@ const part2 = () => {
   input.unshift(".".repeat(142));
   input.push(".".repeat(142));
 
+  let gearLocations = [];
 
-  console.log(input[1], typeof input[1])
+  input = input.map((line) => line.split(""));
 
   input.forEach((line, lineIndex) => {
-
-    let currentNumber = null;
-
-
-
-    line.split("").map((char, charIndex) => {
-      if (isNumber(char) && currentNumber === null) {
-        currentNumber = char;
-      } else if (isNumber(char) && currentNumber !== null) {
-        currentNumber += char;
-      } else if (currentNumber !== null) {
-        // console.log(currentNumber)
-        // search for a * and do calculation
-
-
-
-
-        out += searchForMultiplyer(currentNumber, charIndex, lineIndex);
-        currentNumber = null;
-      }
+    line.forEach((char, charIndex) => {
+      if (char === "*") gearLocations.push([lineIndex, charIndex]);
     });
   });
 
-  // console.log(input[1]);
-  // console.log(input[2]);
+  gearLocations.forEach((location) => {
+    let line = location[0];
+    let pos = location[1];
 
+    let numbers = [];
+
+    //find the numbers surrounding the gear
+
+    //first check same line, to the left of gear
+    if (isNumber(input[line][pos - 1]) === true) {
+      let foundNumber = checkLeft(line, pos - 1) + input[line][pos - 1];
+      numbers.push(foundNumber);
+    }
+    //next check same line, to the right of gear
+    if (isNumber(input[line][pos + 1]) === true) {
+      let foundNumber = input[line][pos + 1] + checkRight(line, pos + 1);
+      numbers.push(foundNumber);
+    }
+
+    //check the line above and below the gear
+    // note this may add a number to the array more than once.
+    // I will use a Set to result in only unique numvers later
+    for (let i = pos - 1; i <= pos + 1; i++) {
+      if (isNumber(input[line - 1][i]) === true) {
+        let foundNumber = checkLeft(line - 1, i) + input[line - 1][i] + checkRight(line - 1, i);
+        numbers.push(foundNumber);
+      }
+
+      if (isNumber(input[line + 1][i]) === true) {
+        let foundNumber = checkLeft(line + 1, i) + input[line + 1][i] + checkRight(line + 1, i);
+        numbers.push(foundNumber);
+      }
+    }
+
+    function checkLeft(line, pos) {
+      let foundNumber = "";
+      while (isNumber(input[line][pos - 1]) === true) {
+        foundNumber = input[line][pos - 1] + foundNumber;
+        pos--;
+      }
+      return foundNumber;
+    }
+
+    function checkRight(line, pos) {
+      let foundNumber = "";
+      while (isNumber(input[line][pos + 1]) === true) {
+        foundNumber = foundNumber + input[line][pos + 1];
+        pos++;
+      }
+      return foundNumber;
+    }
+    //remove the duplicates
+    numbers = [...new Set(numbers)];
+    if (numbers.length === 2) {
+      out = out + numbers[0] * numbers[1];
+    }
+  });
+
+  console.log(out);
 };
 
 part2();
@@ -186,68 +225,3 @@ part2();
 function isNumber(char) {
   return parseInt(char) >= 0 && parseInt(char) <= 9;
 }
-
-function searchForMultiplyer (number, charIndex, lineIndex) {
-
-  let startIndex = charIndex - number.length
-
-  for(let i=startIndex; i<startIndex + number.length;i++){
-    // console.log(input[lineIndex][i])  
-    input[lineIndex][i] = '.'
-    // console.log(input[lineIndex][i],'a')  
-
-  }
-}
-
-function searchForMultiplyer(number, charIndex, lineIndex) {
-  
-  let startIndex = charIndex - number.length
-
-  for(let i=startIndex; i<startIndex + number.length;i++){
-      // console.log(input[lineIndex][i])  
-      input[lineIndex][i] = '.'
-      // console.log(input[lineIndex][i],'a')  
-  
-    }
-  
-    // console.log(number, charIndex, lineIndex, input[lineIndex][startIndex])
-  }
-
-  
-  
-  
-  
-  
-  // let output = 0;
-  // if (input[lineIndex][charIndex] === "*" && isNumber(input[lineIndex][charIndex + 1])) {
-    //   let multiplyNum = "";
-    //   let i = charIndex + 1;
-    
-    //   while (isNumber(input[lineIndex][i])) {
-      //     multiplyNum += input[lineIndex][i];
-      //     i++;
-      //   }
-      
-  //   // console.log(number,input[lineIndex][charIndex+1])
-  //   output = number * parseInt(multiplyNum);
-  // } else {
-  //   // check the following line from
-  //   // the start of the number(-1 for diaganol) to + 1
-  //   l = lineIndex+1
-  //   let endIndex = charIndex + 1;
-  //   let startIndex = charIndex - 1 - number.toString().length;
-  //   let gearIndex = null
-
-  //   // console.log(number,startIndex,charIndex,endIndex,lineIndex)
-
-  //   for(let i=startIndex; i<=endIndex; i++){
-  //     if(input[l][i]==='*'){
-  //       gearIndex=i
-  //     }
-  //   }
-  //   if(gearIndex!==null) console.log(number,gearIndex)
-
-  // }
-
-  // return output;
-

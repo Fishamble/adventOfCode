@@ -1,4 +1,4 @@
-let input = `seeds: 1187290020 247767461 40283135 64738286 2044483296 66221787 1777809491 103070898 108732160 261552692 3810626561 257826205 3045614911 65672948 744199732 300163578 3438684365 82800966 2808575117 229295075
+let inputmm = `seeds: 1187290020 247767461 40283135 64738286 2044483296 66221787 1777809491 103070898 108732160 261552692 3810626561 257826205 3045614911 65672948 744199732 300163578 3438684365 82800966 2808575117 229295075
 
 seed-to-soil map:
 1716002126 3982609232 32819234
@@ -236,7 +236,7 @@ humidity-to-location map:
 1996782879 1639313170 376238664
 1342577895 3179550973 89352473`;
 
-let inputmmm = `seeds: 79 14 55 13
+let input = `seeds: 79 14 55 13
 
 seed-to-soil map:
 50 98 2
@@ -292,22 +292,28 @@ const part1 = () => {
   let humidityToLocation = input.split("\n\n")[7].split("\n");
   humidityToLocation.shift();
 
-  let temp = [...seeds];
+  //   let temp = [...seeds];
 
-  // console.log(temp);
-  while (temp.length > 0) {
-    let start = temp.shift();
-    let range = temp.shift();
-    let end = start + range;
+  //   // console.log(temp);
+  //   while (temp.length > 0) {
+  //     let start = temp.shift();
+  //     let range = temp.shift();
+  //     let end = start + range;
 
-  console.log('here')
-    for(let i= start; i<end; i++ ){
-      let seed=i
+  //   console.log('here')
+  //     for(let i= start; i<end; i++ ){
+  //       let seed=i
 
-//  console.log(seed)
+  // //  console.log(
+    
+  // console.log(typeof seeds[1])
 
-  // seeds.forEach((seed) => {
+  seeds = [82];
+
+  seeds.forEach((seed) => {
     let locationNuber = null;
+
+    console.log(seed)
 
     seedToSoil.forEach((sToS) => {
       let [destinationRangeStart, sourceRangeStart, rangeLength] = sToS.split(" ").map((el) => parseInt(el));
@@ -317,6 +323,9 @@ const part1 = () => {
       seed = locationNuber;
       locationNuber = null;
     }
+
+    console.log(seed)
+
     soilToFertilizer.forEach((sToS) => {
       let [destinationRangeStart, sourceRangeStart, rangeLength] = sToS.split(" ").map((el) => parseInt(el));
       if (seed >= sourceRangeStart && seed <= sourceRangeStart + rangeLength) locationNuber = destinationRangeStart + (seed - sourceRangeStart);
@@ -325,6 +334,11 @@ const part1 = () => {
       seed = locationNuber;
       locationNuber = null;
     }
+
+    console.log(seed)
+
+
+
     fertilizerToWater.forEach((sToS) => {
       let [destinationRangeStart, sourceRangeStart, rangeLength] = sToS.split(" ").map((el) => parseInt(el));
       if (seed >= sourceRangeStart && seed <= sourceRangeStart + rangeLength) locationNuber = destinationRangeStart + (seed - sourceRangeStart);
@@ -333,6 +347,10 @@ const part1 = () => {
       seed = locationNuber;
       locationNuber = null;
     }
+
+    console.log(seed)
+
+
     waterToLight.forEach((sToS) => {
       let [destinationRangeStart, sourceRangeStart, rangeLength] = sToS.split(" ").map((el) => parseInt(el));
       if (seed >= sourceRangeStart && seed <= sourceRangeStart + rangeLength) locationNuber = destinationRangeStart + (seed - sourceRangeStart);
@@ -341,6 +359,9 @@ const part1 = () => {
       seed = locationNuber;
       locationNuber = null;
     }
+
+    console.log(seed)
+
 
     lightToTemperature.forEach((sToS) => {
       let [destinationRangeStart, sourceRangeStart, rangeLength] = sToS.split(" ").map((el) => parseInt(el));
@@ -351,6 +372,9 @@ const part1 = () => {
       locationNuber = null;
     }
 
+    console.log(seed)
+
+
     temperatureToHumidity.forEach((sToS) => {
       let [destinationRangeStart, sourceRangeStart, rangeLength] = sToS.split(" ").map((el) => parseInt(el));
       if (seed >= sourceRangeStart && seed <= sourceRangeStart + rangeLength) locationNuber = destinationRangeStart + (seed - sourceRangeStart);
@@ -359,6 +383,10 @@ const part1 = () => {
       seed = locationNuber;
       locationNuber = null;
     }
+
+    
+    console.log(seed)
+
 
     humidityToLocation.forEach((sToS) => {
       let [destinationRangeStart, sourceRangeStart, rangeLength] = sToS.split(" ").map((el) => parseInt(el));
@@ -371,9 +399,8 @@ const part1 = () => {
 
     out = Math.min(seed, out);
     // console.log(out)
-  }
-}
-  console.log(out);
+  });
+  // console.log(out);
 };
 
 part1();

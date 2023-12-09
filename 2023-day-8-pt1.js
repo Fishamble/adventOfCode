@@ -759,7 +759,7 @@ const part1 = () => {
   let input = input3;
 
 
-  // parse the instrucitons and nodes
+  // parse the instructions and nodes
   let instructions = input.split("\n\n")[0];
   let nodes = input
     .split("\n\n")[1]
@@ -771,9 +771,7 @@ const part1 = () => {
       return [nodeStart, nodeLeft, nodeRight];
     });
 
-    // console.log(nodes)
-
-    // Put into an object so can easily acces 
+    // Transfer into an object so can easily acces 
     let nodesObj = {}
     nodes.forEach(node=>{
         nodesObj[node[0]]= {nodeLeft:node[1],nodeRight:node[2]}
@@ -782,6 +780,8 @@ const part1 = () => {
     let curr = 'AAA'
     let out = 0
     let pointer = 0
+
+    // loop to find ZZZ
 
     while(curr !== 'ZZZ'){
         console.log(curr)
